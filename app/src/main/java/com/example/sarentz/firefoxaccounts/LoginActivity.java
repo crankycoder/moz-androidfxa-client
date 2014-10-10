@@ -24,7 +24,7 @@ public class LoginActivity extends Activity
         setContentView(R.layout.activity_login);
 
         final WebView webView = (WebView) findViewById(R.id.webView);
-        webView.loadUrl("http://192.168.0.2:5000/login");
+        webView.loadUrl("https://tmp.sateh.com/login");
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);

@@ -32,7 +32,7 @@ public class AuthorizationTask extends AsyncTask<AuthorizationResponse,Void, Aut
 
     @Override
     protected AuthorizationResult doInBackground(AuthorizationResponse... authorizationResponses) {
-        final String url = "http://192.168.0.2:5000/oauth?code=" + authorizationResponses[0].getCode() + "&state=" + authorizationResponses[0].getState();
+        final String url = "https://tmp.sateh.com/oauth?code=" + authorizationResponses[0].getCode() + "&state=" + authorizationResponses[0].getState();
         final AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
         final HttpGet getRequest = new HttpGet(url);
 
