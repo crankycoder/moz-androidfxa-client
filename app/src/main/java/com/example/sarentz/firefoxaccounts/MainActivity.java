@@ -11,7 +11,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
@@ -21,7 +24,19 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        updateText();
+        updateUserInterface();
+
+        final Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences preferences = getApplicationContext().getSharedPreferences("MySettings", 0);
+                String accessToken = preferences.getString("accessToken", null);
+
+                ApiTask task = new ApiTask(accessToken, MainActivity.this);
+                task.execute("Android");
+            }
+        });
     }
 
     @Override
@@ -38,7 +53,7 @@ public class MainActivity extends Activity
             if (isLoggedIn()) {
                 logout();
                 updateMenuTitle();
-                updateText();
+                updateUserInterface();
             } else {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivityForResult(intent, 1);
@@ -53,9 +68,14 @@ public class MainActivity extends Activity
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 updateMenuTitle();
-                updateText();
+                updateUserInterface();
             }
         }
+    }
+
+    void showApiResponse(ApiResponse response) {
+        Toast toast = Toast.makeText(this, "Server said: \"" + response.getMessage() + "\"", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     boolean isLoggedIn() {
@@ -63,14 +83,18 @@ public class MainActivity extends Activity
         return preferences.getString("email", null) != null;
     }
 
-    void updateText() {
+    void updateUserInterface() {
         final TextView textView = (TextView) findViewById(R.id.textView);
+        final Button button = (Button) findViewById(R.id.button);
+
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("MySettings", 0);
         String email = preferences.getString("email", null);
         if (email != null) {
             textView.setText("Hello, " + email);
+            button.setVisibility(View.VISIBLE);
         } else {
             textView.setText("Not logged in");
+            button.setVisibility(View.INVISIBLE);
         }
     }
 
