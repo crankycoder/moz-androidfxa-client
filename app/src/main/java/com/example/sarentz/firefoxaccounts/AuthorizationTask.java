@@ -36,6 +36,8 @@ public class AuthorizationTask extends AsyncTask<AuthorizationResponse,Void, Aut
         final AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
         final HttpGet getRequest = new HttpGet(url);
 
+        getRequest.setHeader("Cookie", "state=" + authorizationResponses[0].getState());
+
         try {
             HttpResponse response = client.execute(getRequest);
             final int statusCode = response.getStatusLine().getStatusCode();
